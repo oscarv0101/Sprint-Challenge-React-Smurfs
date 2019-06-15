@@ -64,7 +64,7 @@ class SmurfForm extends Component {
             value={this.state.height}
             name="height"
           />
-          <button type="submit">Add to the village</button>
+          <button className="button" type="submit">Add to the village</button>
         </form>
       </div>
     );
