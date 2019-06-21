@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import axios from 'axios';
+import { Redirect } from 'react-router-dom';
 
 class SmurfForm extends Component {
   constructor(props) {
@@ -6,18 +8,30 @@ class SmurfForm extends Component {
     this.state = {
       name: '',
       age: '',
-      height: ''
+      height: '',
+      redirect: false
     };
   }
 
   addSmurf = event => {
     event.preventDefault();
+    let {name, age, height} =this.state
     // add code to create the smurf using the api
+    axios
+      .post(`http://localhost:3333/smurfs`, this.state)
+      .then(response => {
+        this.props.sendFormData(response.data)
+        this.setState({ redirect: true })
+      })
+      .catch(error => {
+        console.error('Server Error', error)
+      })
 
     this.setState({
       name: '',
       age: '',
-      height: ''
+      height: '',
+      redirect: true
     });
   }
 
@@ -26,6 +40,9 @@ class SmurfForm extends Component {
   };
 
   render() {
+    if(this.state.redirect) {
+      return <Redirect push to='/' />
+    }
     return (
       <div className="SmurfForm">
         <form onSubmit={this.addSmurf}>
@@ -47,7 +64,7 @@ class SmurfForm extends Component {
             value={this.state.height}
             name="height"
           />
-          <button type="submit">Add to the village</button>
+          <button className="button" type="submit">Add to the village</button>
         </form>
       </div>
     );
